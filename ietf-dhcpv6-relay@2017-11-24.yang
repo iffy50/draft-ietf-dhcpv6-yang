@@ -9,7 +9,7 @@ module ietf-dhcpv6-relay {
 
   import ietf-dhcpv6-options {
     prefix dhcpv6-options;
-    revision-date "2017-11-20";
+    revision-date "2017-11-24";
   }
 
   organization "DHC WG";
@@ -22,7 +22,7 @@ module ietf-dhcpv6-relay {
   description "This model defines a YANG data model that can be
     used to configure and manage a DHCPv6 relay.";
 
-  revision 2017-11-20 {
+  revision 2017-11-24 {
     description "First version of the separated relay specific
       YANG model.";
 
