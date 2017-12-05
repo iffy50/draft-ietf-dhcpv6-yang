@@ -12,7 +12,7 @@ module ietf-dhcpv6-server {
   }
   import ietf-dhcpv6-options {
     prefix dhcpv6-options;
-    revision-date "2017-11-24";
+    revision-date "2017-12-04";
   }
 
   organization "DHC WG";
@@ -25,6 +25,12 @@ module ietf-dhcpv6-server {
   description "This model defines a YANG data model that can be
     used to configure and manage a DHCPv6 server.";
 
+  revision 2017-12-04{
+	  description "First version of the use of 
+		  feature and presence in options";
+	  reference "I-D: draft-ietf-dhc-dhcpv6-yang";
+  }
+  
   revision 2017-11-24 {
     description "First version of the separated server specific
       YANG model.";
@@ -463,154 +469,155 @@ module ietf-dhcpv6-server {
             }
           }
         }
+
+      }
         container prefix-pools {
-          description "If a server supports prefix
-            delegation function, this container will
-            be used to define the delegating router's
-            refix pools.";
-          list prefix-pool {
-            key pool-id;
-            description "Similar to server's
-              address pools, a delegating router
-              can also be configured with multiple
-              prefix pools specified by a list
-              called 'prefix-pool'.";
-            leaf pool-id {
-              type uint32;
-              mandatory true;
-              description "pool id";
-            }
-            leaf prefix {
-              type inet:ipv6-prefix;
-              mandatory true;
-              description "ipv6 prefix";
-            }
-            leaf prefix-length {
-              type uint8;
-              mandatory true;
-              description "prefix length";
-            }
-            leaf renew-time {
-              type yang:timeticks;
-              mandatory true;
-              description "renew time";
-            }
-            leaf rebind-time {
-              type yang:timeticks;
-              mandatory true;
-              description "rebind time";
-            }
-            leaf preferred-lifetime {
-              type yang:timeticks;
-              mandatory true;
-              description "preferred lifetime for
-                IA";
-            }
-            leaf valid-lifetime {
-              type yang:timeticks;
-              mandatory true;
-              description "valid lifetime for IA";
-            }
-            leaf utilization-ratio {
-              type threshold;
-              mandatory true;
-              description "utilization ratio";
-            }
-            leaf inherit-option-set {
-              type boolean;
-              mandatory true;
-              description "whether to inherit
-                configuration from higher level";
-            }
-            leaf option-set-id {
-              type leafref {
-                path "/server/option-sets/option-set/id";
-              }
-              description "The ID field of relevant option-set to be
-                provisioned to clients of this prefix-pool.";
-            }
-          }
-          list binding-info {
-            key cli-id;
-            config "false";
-            description "A list records a
-              binding information for each
-              DHCPv6 client that has already
-              been allocated IPv6 addresses.";
-            leaf cli-id {
-              type uint32;
-              mandatory true;
-              description "client id";
-            }
-            container duid {
-              description "Sets the DUID";
-              uses duid;
-            }
-            list cli-iapd {
-              key iaid;
-              description "client IAPD";
-              leaf iaid {
-                type uint32;
-                mandatory true;
-                description "IAID";
-              }
-              leaf-list cli-prefix {
-                type inet:ipv6-prefix;
-                description
-                  "client ipv6 prefix";
-              }
-              leaf-list cli-prefix-len {
-                type uint8;
-                description
-                  "client prefix length";
-              }
+            description "If a server supports prefix
+              delegation function, this container will
+              be used to define the delegating router's
+              refix pools.";
+            list prefix-pool {
+              key pool-id;
+              description "Similar to server's
+                address pools, a delegating router
+                can also be configured with multiple
+                prefix pools specified by a list
+                called 'prefix-pool'.";
               leaf pool-id {
                 type uint32;
                 mandatory true;
                 description "pool id";
               }
-            }
-          }
-        }
-        container hosts {
-          description "hosts level";
-          list host {
-            key cli-id;
-            description "specific host";
-            leaf cli-id {
-              type uint32;
-              mandatory true;
-              description "client id";
-            }
-            container duid {
-              description "Sets the DUID";
-              uses duid;
-            }
-            leaf inherit-option-set {
-              type boolean;
-              mandatory true;
-              description "whether to inherit
-                configuration
-                from higher level";
-            }
-            leaf option-set-id {
-              type leafref {
-                path "/server/option-sets/option-set/id";
+              leaf prefix {
+                type inet:ipv6-prefix;
+                mandatory true;
+                description "ipv6 prefix";
               }
-              description "The ID field of relevant option-set to be
-                provisioned to clients of this prefix-pool.";
+              leaf prefix-length {
+                type uint8;
+                mandatory true;
+                description "prefix length";
+              }
+              leaf renew-time {
+                type yang:timeticks;
+                mandatory true;
+                description "renew time";
+              }
+              leaf rebind-time {
+                type yang:timeticks;
+                mandatory true;
+                description "rebind time";
+              }
+              leaf preferred-lifetime {
+                type yang:timeticks;
+                mandatory true;
+                description "preferred lifetime for
+                  IA";
+              }
+              leaf valid-lifetime {
+                type yang:timeticks;
+                mandatory true;
+                description "valid lifetime for IA";
+              }
+              leaf utilization-ratio {
+                type threshold;
+                mandatory true;
+                description "utilization ratio";
+              }
+              leaf inherit-option-set {
+                type boolean;
+                mandatory true;
+                description "whether to inherit
+                  configuration from higher level";
+              }
+              leaf option-set-id {
+                type leafref {
+                  path "/server/option-sets/option-set/id";
+                }
+                description "The ID field of relevant option-set to be
+                  provisioned to clients of this prefix-pool.";
+              }
             }
-            leaf nis-domain-name {
-              type string;
-              description "nis domain name";
-            }
-            leaf nis-plus-domain-name {
-              type string;
-              description "nisp domain name";
+            list binding-info {
+              key cli-id;
+              config "false";
+              description "A list records a
+                binding information for each
+                DHCPv6 client that has already
+                been allocated IPv6 addresses.";
+              leaf cli-id {
+                type uint32;
+                mandatory true;
+                description "client id";
+              }
+              container duid {
+                description "Sets the DUID";
+                uses duid;
+              }
+              list cli-iapd {
+                key iaid;
+                description "client IAPD";
+                leaf iaid {
+                  type uint32;
+                  mandatory true;
+                  description "IAID";
+                }
+                leaf-list cli-prefix {
+                  type inet:ipv6-prefix;
+                  description
+                    "client ipv6 prefix";
+                }
+                leaf-list cli-prefix-len {
+                  type uint8;
+                  description
+                    "client prefix length";
+                }
+                leaf pool-id {
+                  type uint32;
+                  mandatory true;
+                  description "pool id";
+                }
+              }
             }
           }
-        }
-      }
+          container hosts {
+            description "hosts level";
+            list host {
+              key cli-id;
+              description "specific host";
+              leaf cli-id {
+                type uint32;
+                mandatory true;
+                description "client id";
+              }
+              container duid {
+                description "Sets the DUID";
+                uses duid;
+              }
+              leaf inherit-option-set {
+                type boolean;
+                mandatory true;
+                description "whether to inherit
+                  configuration
+                  from higher level";
+              }
+              leaf option-set-id {
+                type leafref {
+                  path "/server/option-sets/option-set/id";
+                }
+                description "The ID field of relevant option-set to be
+                  provisioned to clients of this prefix-pool.";
+              }
+              leaf nis-domain-name {
+                type string;
+                description "nis domain name";
+              }
+              leaf nis-plus-domain-name {
+                type string;
+                description "nisp domain name";
+              }
+            }
+          }
     }
     container relay-opaque-paras {
       description "This container contains some
