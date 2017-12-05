@@ -21,17 +21,33 @@ module ietf-dhcpv6-options {
   description "This model defines a YANG data model that can be
     used to configure and manage a DHCPv6 server.";
 
+  revision 2017-12-04{
+	  description "First version of the use of 
+		  feature and presence in options";
+	  reference "I-D:draft-ietf-dhc-dhcpv6-yang";
+  }
+  
   revision 2017-11-24 {
     description "First version of the separated DHCPv6 options
       YANG model.";
-
     reference "I-D:draft-ietf-dhc-dhcpv6-yang";
   }
 
   /*
    * Features
    */
-
+	feature server_op{
+		description "Support server options.";
+	}
+	
+	feature relay_op{
+		description "Support relay options.";
+	}
+	
+	feature client_op{
+		description "Support client options";
+	}
+	 
   /*
    * Groupings
    */
@@ -61,7 +77,9 @@ module ietf-dhcpv6-options {
   grouping server-option-definitions {
     description "Contains definitions for options configured on the
       DHCPv6 server which will be supplied to clients.";
+    
     container server-unicast-option {
+      if-feature server_op;
       description "OPTION_UNICAST (12) Server Unicast Option";
       reference "RFC3315: Dynamic Host Configuration Protocol
       for IPv6 (DHCPv6)";
@@ -69,23 +87,28 @@ module ietf-dhcpv6-options {
         type inet:ipv6-address;
       }
     }
+    
     container sip-server-option {
-      description "OPTION_SIP_SERVER_D (21) SIP Servers Domain Name List
+    	if-feature server_op;
+    	presence "Enable this option";
+    	description "OPTION_SIP_SERVER_D (21) SIP Servers Domain Name List
       and OPTION_SIP_SERVER_A (22) SIP Servers IPv6 Address List";
       /* if - Note - this container is currently modelling two options
        (21 & 22). It would allow the config of a mixed list of domain
        names and addresses in a way that doesn't follow the
        RFC. Needs to be broken into SIP Domain list and SIP Address
        list containers */
-      reference "RFC3319: Dynamic Host Configuration Protocol
+    	reference "RFC3319: Dynamic Host Configuration Protocol
         (DHCPv6) Options for Session Initiation Protocol (SIP)
         Servers";
-      leaf enable {
+       
+ /*     leaf enable {
         type boolean;
         mandatory true;
         description "Indicate whether this option will be included in
           the option set";
-      }
+      }*/
+    	
       list sip-server {
         key sip-serv-id;
         description "sip server info";
@@ -108,17 +131,19 @@ module ietf-dhcpv6-options {
       }
     }
     container dns-config-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_DNS_SERVERS (23) DNS recursive Name
         Server option";
       reference "RFC3646: DNS Configuration options for Dynamic
         Host Configuration Protocol for IPv6 (DHCPv6)";
-      leaf enable {
+/*      leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list dns-server {
         key dns-serv-id;
         description "dns server info";
@@ -135,16 +160,18 @@ module ietf-dhcpv6-options {
       }
     }
     container domain-searchlist-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_DOMAIN_LIST (24) Domain Search List Option";
       reference "RFC3646: DNS Configuration options for Dynamic
         Host Configuration Protocol for IPv6 (DHCPv6)";
-      leaf enable {
+/*      leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      }*/
       list domain-searchlist {
         key domain-searchlist-id;
         description "dns server info";
@@ -160,18 +187,21 @@ module ietf-dhcpv6-options {
         }
       }
     }
+    
     container nis-config-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_NIS_SERVERS (27) Network Information Service (NIS)
         Servers Option.";
       reference "RFC3989: Network Information Service (NIS) Configuration
         Options for Dynamic Host Configuration Protocol for IPv6 (DHCPv6)";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      }*/
       list nis-server {
         key nis-serv-id;
         description "nis server info";
@@ -188,17 +218,19 @@ module ietf-dhcpv6-options {
       }
     }
     container nis-plus-config-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_NISP_SERVERS (28): Network Information Service V2
         (NIS+) Servers Option.";
       reference "RFC3989: Network Information Service (NIS) Configuration
         Options for Dynamic Host Configuration Protocol for IPv6 (DHCPv6)";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      }*/
       list nis-plus-server {
         key nis-plus-serv-id;
         description "NIS+ server information.";
@@ -215,18 +247,20 @@ module ietf-dhcpv6-options {
       }
     }
     container nis-domain-name {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_NIS_DOMAIN_NAME (29) Network Information
         Service (NIS) Domain Name Option";
       reference "RFC3989: Network Information Service (NIS)
         Configuration Options for Dynamic Host Configuration Protocol
         for IPv6 (DHCPv6)";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       leaf nis-domain-name {
         type string;
         description "The Network Information Service (NIS) Domain Name
@@ -235,17 +269,19 @@ module ietf-dhcpv6-options {
       }
     }
     container sntp-server-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_SNTP_SERVERS (31) Simple Network Time Protocol
         (SNTP) Servers Option";
       reference "RFC4075: Simple Network Time Protocol (SNTP) Configuration
         Option for DHCPv6";
-      leaf enable {
+  /*    leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list sntp-server {
         key sntp-serv-id;
         description "sntp server info";
@@ -262,17 +298,19 @@ module ietf-dhcpv6-options {
       }
     }
     container info-refresh-time-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_INFORMATION_REFRESH_TIME (32) Information Refresh
         Time option.";
       reference "RFC4242: Information Refresh Time Option for Dynamic Host
         Configuration Protocol for IPv6 (DHCPv6";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
          option will be included in the
          option set";
-      }
+      }*/
       leaf info-refresh-time {
         type yang:timeticks;
         mandatory true;
@@ -280,15 +318,17 @@ module ietf-dhcpv6-options {
       }
     }
     container cli-fqdn-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_CLIENT_FQDN (39) DHCPv6 Client FQDN Option";
       reference "RFC4704: The Dynamic Host Configuration Protocol for IPv6
         (DHCPv6) Client Fully Qualified Domain Name (FQDN) Option";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included in the
           option set";
-      }
+      }*/
       leaf server-initiate-update {
         type boolean;
         mandatory true;
@@ -306,14 +346,16 @@ module ietf-dhcpv6-options {
       }
     }
     container posix-timezone-option {
+    	if-feature server_op;
+    	presence "Enable this option";
       description "OPTION_NEW_POSIX_TIMEZONE (41) Posix Timezone option";
       reference "RFC4822: Timezone Options for DHCP";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included in the
           option set";
-      }
+      }*/
       leaf tz-posix {
         type string;
         mandatory true;
@@ -321,14 +363,16 @@ module ietf-dhcpv6-options {
       }
     }
     container posix-timezone-option-db-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_NEW_TZDB_TIMEZONE (42) Timezone Database option";
       reference "RFC4822: Timezone Options for DHCP";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included in the
           option set";
-      }
+      }*/
       leaf tz-database {
         type string;
         mandatory true;
@@ -336,17 +380,19 @@ module ietf-dhcpv6-options {
       }
     }
     container ntp-server-option {
+      if-feature server_op;
+      presence "Enable this option";
       //This option looks like it needs work to correctly model the
       //option as defined in the RFC.
       description "OPTION_NTP_SERVER (56) NTP Server Option for DHCPv6";
       reference "RFC5908: Network Time Protocol (NTP) Server Option for
       DHCPv6";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included in the
           option set";
-      }
+      }*/
       list ntp-server {
         key ntp-serv-id;
         description "ntp server info";
@@ -373,16 +419,18 @@ module ietf-dhcpv6-options {
       }
     }
     container network-boot-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPT_BOOTFILE_URL (59) and OPT_BOOTFILE_PARAM (60)";
       reference "RFC5970: DHCPv6 Options for Network Boot";
       // if - Looks like 2 options combined that need to be split out
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list boot-file {
         key boot-file-id;
         description "boot file info";
@@ -422,15 +470,17 @@ module ietf-dhcpv6-options {
       }
     }
     container aftr-name-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_AFTR_NAME (64) AFTR-Name DHCPv6 Option";
       reference "RFC6334: Dynamic Host Configuration Protocol for IPv6
       (DHCPv6) Option for Dual-Stack Lite";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included in the
         option set";
-      }
+      } */
       leaf tunnel-endpoint-name {
         type string;
         mandatory true;
@@ -438,19 +488,21 @@ module ietf-dhcpv6-options {
       }
     }
     container kerberos-option {
+      if-feature server_op;
+      presence "Enable this option";
       //This needs re-working and possibly splitting into several option
       //containers to follow the RFC.
       description "OPTION_KRB_KDC (78) Kerberos KDB Option, OPTION_KRB_REALM_NAME (76)
         Kerberos Realm Name Option and OPTION_KRB_DEFAULT_REALM_NAME (77)
         Kerberos Default Realm Name Option";
       reference "RFC6784: Kerberos Options for DHCPv6";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       leaf default-realm-name {
         type string;
         mandatory true;
@@ -497,16 +549,18 @@ module ietf-dhcpv6-options {
       }
     }
     container sol-max-rt-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_SOL_MAX_RT (82) sol max rt option";
       reference "RFC7083: Modification to Default Values of
         SOL_MAX_RT and INF_MAX_RT";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-        }
+        } */
         leaf sol-max-rt-value {
           type yang:timeticks;
           mandatory true;
@@ -514,16 +568,18 @@ module ietf-dhcpv6-options {
         }
     }
     container inf-max-rt-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_INF_MAX_RT (83) inf max rt option";
       reference "RFC7083: Modification to Default Values of
         SOL_MAX_RT and INF_MAX_RT";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      }*/
       leaf inf-max-rt-value {
         type yang:timeticks;
         mandatory true;
@@ -531,17 +587,19 @@ module ietf-dhcpv6-options {
       }
     }
     container addr-selection-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_ADDRSEL (84) and OPTION_ADDRSEL_TABLE (85)";
       reference "RFC7078: Distributing Address Selection Policy Using
       DHCPv6";
       // if - Needs checking to see if this matches the RFC - there
       // are two options here.
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included in the
                   option set";
-        }
+        }*/
       leaf a-bit-set {
         type boolean;
         mandatory true;
@@ -583,16 +641,18 @@ module ietf-dhcpv6-options {
       }
     }
     container pcp-server-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_V6_PCP_SERVER (86)
         pcp server option";
       reference "RFC7291: DHCP Options for the Port Control
         Protocol (PCP)";
-      leaf enable {
+    /*  leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included
           in the option set";
-      }
+      } */
       list pcp-server {
         key pcp-serv-id;
         description "pcp server info";
@@ -609,15 +669,17 @@ module ietf-dhcpv6-options {
       }
     }
     container s46-rule-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_S46_RULE (89) S46 rule option";
       reference "RFC7598: DHCPv6 Options for Configuration of
         Softwire Address and Port-Mapped Clients";
-      leaf enable {
+    /*  leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included
           in the option set";
-      }
+      } */
       list s46-rule {
         key rule-id;
         description "s46 rule";
@@ -662,15 +724,17 @@ module ietf-dhcpv6-options {
       }
     }
     container s46-br-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_S46_BR (90) S46 BR Option";
       reference "RFC7598: DHCPv6 Options for Configuration of
         Softwire Address and Port-Mapped Clients";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be included
           in the option set";
-      }
+      } */
       list br {
         key br-id;
         description "br info";
@@ -687,16 +751,18 @@ module ietf-dhcpv6-options {
       }
     }
     container s46-dmr-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_S46_DMR (91) S46 DMR Option";
       reference "RFC7598: DHCPv6 Options for Configuration of
         Softwire Address and Port-Mapped Clients";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list dmr {
         key dmr-id;
         description "dmr info";
@@ -718,17 +784,19 @@ module ietf-dhcpv6-options {
       }
     }
     container s46-v4-v6-binding-option {
+      if-feature server_op;
+      presence "Enable this option";
       description "OPTION_S46_V4V6BIND (92) S46 IPv4/IPv6 Address
         Binding option";
       reference "RFC7598: DHCPv6 Options for Configuration of
         Softwire Address and Port-Mapped Clients";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list ce {
         key ce-id;
         description "ce info";
@@ -764,6 +832,7 @@ module ietf-dhcpv6-options {
     description "Relay supplied DHCP Options";
     reference "RFC6422: Relay-Supplied DHCP Options";
     container erp-local-domain-name-option {
+      if-feature relay_op;	
       description "OPTION_ERP_LOCAL_DOMAIN_NAME (65) DHCPv6 ERP Local
         Domain Name Option";
       reference "RFC6440: The EAP Re-authentication Protocol (ERP)
@@ -830,9 +899,18 @@ module ietf-dhcpv6-options {
       }
     }
     container option-request-option {
+      if-feature client_op;
+      presence "Enable this option";
       description "OPTION_ORO (6) Option Request Option";
       reference "RFC3315: Dynamic Host Configuration Protocol
       for IPv6 (DHCPv6)";
+      /*   leaf enable {
+      type boolean;
+      mandatory true;
+      description "indicate whether this
+        option will be configured at the
+        client";
+    } */
       list oro-option {
         key option-code;
         description "oro option";
@@ -850,6 +928,7 @@ module ietf-dhcpv6-options {
       }
     }
     container rapid-commit-option {
+      if-feature client_op;
       description "OPTION_RAPID_COMMIT (14)";
       reference "RFC3315: Dynamic Host Configuration Protocol
       for IPv6 (DHCPv6)";
@@ -861,16 +940,18 @@ module ietf-dhcpv6-options {
       // defined there or as an option?
     }
     container user-class-option {
+      if-feature client_op;
+      presence "Enable this option";
       description "OPTION_USER_CLASS (15) User Class Option";
       reference "RFC3315: Dynamic Host Configuration Protocol
       for IPv6 (DHCPv6)";
-      leaf enable {
+   /*   leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be configured at the
           client";
-      }
+      } */
       list user-class {
         key user-class-id;
         description "user class";
@@ -890,16 +971,18 @@ module ietf-dhcpv6-options {
       }
     }
     container vendor-class-option {
+      if-feature client_op;
+      presence "Enable this option";
       description "OPTION_VENDOR_CLASS (16) Vendor Class Option";
       reference "RFC3315: Dynamic Host Configuration Protocol
       for IPv6 (DHCPv6)";
-      leaf enable {
+    /*  leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be configured at the
           client";
-      }
+      } */
       leaf enterprise-number {
         type uint32;
         mandatory true;
@@ -918,19 +1001,21 @@ module ietf-dhcpv6-options {
       }
     }
     container client-fqdn-option {
+      if-feature client_op;
+      presence "Enable this option";
       description "OPTION_CLIENT_FQDN (39) The Dynamic Host
         Configuration Protocol for IPv6 (DHCPv6) Client Fully
         Qualified Domain Name (FQDN) Option";
       reference "RFC4704: The Dynamic Host Configuration Protocol
         for IPv6 (DHCPv6) Client Fully Qualified Domain Name (FQDN)
         Option";
-      leaf enable {
+    /*  leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be configured at the
           client";
-      }
+      } */
       leaf fqdn {
         type string;
         mandatory true;
@@ -948,16 +1033,18 @@ module ietf-dhcpv6-options {
       }
     }
     container client-arch-type-option {
+    	if-feature client_op;
+    	presence "Enable this option";
       description "OPTION_CLIENT_ARCH_TYPE (61) Client System
         Architecture Type Option";
       reference "RFC5970: DHCPv6 Options for Network Boot";
-      leaf enable {
+   /*   leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be configured at the
           client";
-      }
+      } */
       list architecture-types {
         key type-id;
         description "architecture types";
@@ -974,17 +1061,19 @@ module ietf-dhcpv6-options {
       }
     }
     container client-network-interface-identifier-option {
+      if-feature client_op;
+      presence "Enable this option";
       description
         "OPTION_NII (62) Client Network Interface Identifier
         Option";
       reference "RFC5970: DHCPv6 Options for Network Boot";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be configured at the
           client";
-      }
+      }*/
       leaf type {
         type uint8;
         mandatory true;
@@ -1002,16 +1091,18 @@ module ietf-dhcpv6-options {
       }
     }
     container krb-principal-name-option {
+      if-feature client_op;
+      presence "Enable this option";
       description "OPTION_KRB_PRINCIPAL_NAME (75) Kerberos
         Principal Name Option";
       reference "RFC6784: Kerberos Options for DHCPv6";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be configured at the
           client";
-      }
+      }*/
       leaf principal-name {
         type string;
         mandatory true;
@@ -1020,16 +1111,18 @@ module ietf-dhcpv6-options {
       }
     }
     container client-link-layer-addr-option {
+      if-feature client_op;
+      presence "Enable this option";
       description "OPTION_CLIENT_LINKLAYER_ADDR (79) DHCPv6 Client
         Link-Layer Address Option";
       reference "RFC6939: Client Link-Layer Address Option in
         DHCPv6";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this option will be configured
           at the client";
-      }
+      }*/
       leaf link-layer-type {
         type uint16;
         mandatory true;
@@ -1047,15 +1140,17 @@ module ietf-dhcpv6-options {
 
   grouping custom-option-definitions {
     container operator-option-ipv6-address {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator ipv6 address option";
       reference "RFC7227: Guidelines for Creating New DHCPv6 Options";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      }*/
       list operator-ipv6-addr {
         key operator-ipv6-addr-id;
         description "operator ipv6 address info";
@@ -1072,16 +1167,18 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-single-flag {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator single flag";
       reference "RFC7227: Guidelines for Creating New DHCPv6
         Options";
-      leaf enable {
+    /*  leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list flag {
         key flag-id;
         description "operator single flag info";
@@ -1098,16 +1195,18 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-ipv6-prefix {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator ipv6 prefix option";
       reference "RFC7227: Guidelines for Creating New DHCPv6
         Options";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list operator-ipv6-prefix{
         key operator-ipv6-prefix-id;
         description "operator ipv6 prefix info";
@@ -1129,16 +1228,18 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-int32 {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator integer 32 option";
       reference "RFC7227: Guidelines for Creating New DHCPv6
         Options";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list int32val{
         key int32val-id;
         description "operator integer 32 info";
@@ -1155,16 +1256,18 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-int16 {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator integer 16 option";
       reference "RFC7227: Guidelines for Creating New DHCPv6
         Options";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list int16val{
         key int16val-id;
         description "operator integer 16 info";
@@ -1181,16 +1284,18 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-int8 {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator integer 8 option";
       reference "RFC7227: Guidelines for Creating New DHCPv6
         Options";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list int8val{
         key int8val-id;
         description "operator integer 8 info";
@@ -1207,16 +1312,18 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-uri {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator uri option";
       reference "RFC7227: Guidelines for Creating New DHCPv6
         Options";
-      leaf enable {
+   /*   leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list uri{
         key uri-id;
         description "operator uri info";
@@ -1233,15 +1340,17 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-textstring {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator itext string option";
       reference "RFC7227: Guidelines for Creating New DHCPv6 Options";
-      leaf enable {
+   /*   leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list textstring{
         key textstring-id;
         description "operator text string info";
@@ -1258,15 +1367,17 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-var-data {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator variable length data option";
       reference "RFC7227: Guidelines for Creating New DHCPv6 Options";
-      leaf enable {
+      /*leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      }*/
       list int32val{
         key var-data-id;
         description "operator ivariable length data info";
@@ -1283,16 +1394,18 @@ module ietf-dhcpv6-options {
       }
     }
     container operator-option-dns-wire {
+      if-feature server_op;
+      presence "Enable this option";
       description "operator dns wire format domain name list option";
       reference "RFC7227: Guidelines for Creating New DHCPv6
         Options";
-      leaf enable {
+     /* leaf enable {
         type boolean;
         mandatory true;
         description "indicate whether this
           option will be included in the
           option set";
-      }
+      } */
       list operator-option-dns-wire{
         key operator-option-dns-wire-id;
         description "operator dns wire format info";
