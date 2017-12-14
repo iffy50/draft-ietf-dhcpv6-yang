@@ -75,6 +75,7 @@ module ietf-dhcpv6-server {
      }
    }
   }
+  
 
   grouping duid {
     description "DHCP Unique Identifier";
@@ -134,7 +135,6 @@ module ietf-dhcpv6-server {
    */
 
   container server {
-    presence "Enables server";
     description "dhcpv6 server portion";
     
     /*configuration data*/
