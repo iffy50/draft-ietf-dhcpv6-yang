@@ -60,7 +60,6 @@ module ietf-dhcpv6-relay {
    */
 
 container relay {
-    presence "Enables relay";
     description "dhcpv6 relay portion";
     
     container relay-config{

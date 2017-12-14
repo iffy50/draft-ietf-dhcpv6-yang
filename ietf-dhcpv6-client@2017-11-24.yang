@@ -193,7 +193,6 @@ module ietf-dhcpv6-client {
    */
 
  container client {
-    presence "Enables client";
     description "dhcpv6 client portion";
     
     container client-config{
