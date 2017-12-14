@@ -37,7 +37,7 @@ module ietf-dhcpv6-options {
 	feature sip-server-op {
 		description "Support for SIP Server option";
 	}
-	feature dns-configuration-op {
+	feature dns-config-op {
 		description "Support for DNS Recursive Name Server option";
 	}
 	feature domain-searchlist-op {
@@ -82,7 +82,7 @@ module ietf-dhcpv6-options {
   	feature network-boot-op {
   		description "Support for Network Boot option";
   	}
-  	feature aftr-boot-op {
+  	feature aftr-name-op {
   		description "Support for Address Family Transition
   			Router (AFTR) option";
   	}
@@ -98,7 +98,7 @@ module ietf-dhcpv6-options {
   	feature addr-selection-op {
   		description "Support for Address Selection opiton";
   	}
-  	feature pcp-op {
+  	feature pcp-server-op {
   		description "Support for Port Control Protocol (PCP)
   			option";
   	}
@@ -281,7 +281,7 @@ module ietf-dhcpv6-options {
       }
     }
     container domain-searchlist-option {
-      if-feature dns-searchlist-op;
+      if-feature domain-searchlist-op;
       presence "Enable this option";
       description "OPTION_DOMAIN_LIST (24) Domain Search List Option";
       reference "RFC3646: DNS Configuration options for Dynamic
@@ -398,7 +398,7 @@ module ietf-dhcpv6-options {
       }
     }
     container info-refresh-time-option {
-      if-feature info-refresh-op;
+      if-feature info-refresh-time-op;
       presence "Enable this option";	
       description "OPTION_INFORMATION_REFRESH_TIME (32) Information Refresh
         Time option.";
@@ -444,7 +444,7 @@ module ietf-dhcpv6-options {
       }
     }
     container tzdb-timezone-option {
-      if-feature tzbd-timezone-op;
+      if-feature tzdb-timezone-op;
       presence "Enable this option";
       description "OPTION_NEW_TZDB_TIMEZONE (42) Timezone Database option";
       reference "RFC4822: Timezone Options for DHCP";
@@ -918,7 +918,7 @@ module ietf-dhcpv6-options {
       }
     }
     container rapid-commit-option {
-      if-feature rapid-commmit-op;
+      if-feature rapid-commit-op;
       description "OPTION_RAPID_COMMIT (14)";
       reference "RFC3315: Dynamic Host Configuration Protocol
       for IPv6 (DHCPv6)";
