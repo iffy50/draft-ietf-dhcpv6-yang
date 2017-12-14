@@ -64,7 +64,7 @@ module ietf-dhcpv6-client {
     choice duid-type {
       description "Selects the format for the DUID.";
       case duid-llt {
-        description "DUID Based on Link-layer Address Plus Time";
+        description "DUID Based on Link-layer Address Plus Time (Type 1 - DUID-LLT)";
         reference "RFC3315 Section 9.2";
         leaf duid-llt-hardware-type {
           type uint16;
@@ -82,7 +82,7 @@ module ietf-dhcpv6-client {
         }
       }
       case duid-en {
-        description "DUID Assigned by Vendor Based on Enterprise Number";
+        description "DUID Assigned by Vendor Based on Enterprise Number (Type 2 - DUID-EN)";
         reference "RFC3315 Section 9.3";
         leaf duid-en-enterprise-number {
           type uint32;
@@ -95,7 +95,7 @@ module ietf-dhcpv6-client {
         }
       }
       case duid-ll {
-        description "DUID Based on Link-layer Address";
+        description "DUID Based on Link-layer Address (Type 3 - DUID-LL)";
         reference "RFC3315 Section 9.4";
         leaf duid-ll-hardware-type {
           type uint16;
@@ -105,11 +105,27 @@ module ietf-dhcpv6-client {
           type yang:timeticks;
           description "The time value is the time that the DUID is generated
             represented in seconds since midnight (UTC), January 1, 2000,
-            modulo 2^32.";
+                        modulo 2^32.";
+        }
+      }
+      case duid-uuid {
+        description "DUID based on UUID (Type 4 - DUID-UUID)";
+        reference "RFC6355 Definition of the UUID-Based DHCPv6 Unique Identifier (DUID-UUID)";
+        leaf uuid {
+          type yang:uuid;
+          description "The UUID to be used as the identifier";
+        }
+      }
+      case duid-string {
+        description "DUID based on a free text string";
+        leaf string {
+          type string;
+          description "The string to be used as the identifier";
         }
       }
     }
   }
+
   grouping portset-para {
     description "portset parameters";
     container port-parameter {
